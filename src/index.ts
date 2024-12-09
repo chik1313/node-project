@@ -25,7 +25,6 @@ app.get('/courses', (req: Request, res: Response) => {
     res.json(findedCourses)
 })
 
-
 app.get('/courses/:id', (req: Request, res: Response) => {
     const findedCourse = db.courses.find(c => c.id === +req.params.id)
 
@@ -48,7 +47,30 @@ app.post('/courses', (req: Request, res: Response) => {
         title: req.body.title
     }
     db.courses.push(createdCourse)
-    res.json(createdCourse)
+    res.status(201).json(createdCourse)
+})
+
+app.delete('/courses/:id', (req: Request, res: Response) => {
+    db.courses = db.courses.filter(c => c.id !== +req.params.id)
+
+
+
+    res.sendStatus(204)
+
+})
+
+app.put('/courses/:id', (req: Request, res: Response) => {
+    const findedCourse = db.courses.find(c => c.id === +req.params.id)
+
+    if (!findedCourse) {
+        res.sendStatus(404);
+        return;
+    }
+
+
+    findedCourse.title = req.body.title
+    res.status(204)
+
 })
 
 app.listen(port, () => {
